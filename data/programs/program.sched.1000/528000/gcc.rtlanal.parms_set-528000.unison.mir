@@ -1,0 +1,74 @@
+--- |
+  ; ModuleID = 'dummy.ll'
+
+...
+---
+name:            parms_set
+fixedStack:      
+  - { id: 0, offset: -8, size: 8, alignment: 8 }
+  - { id: 1, offset: -12, size: 4, alignment: 4 }
+stack:           
+  - { id: 0, offset: -16, size: 4, alignment: 1 }
+body:             |
+  bb.0 (freq 51):
+    successors: %bb.4(1), %bb.1(2)
+  
+    BUNDLE {
+      S2_allocframe 16, implicit %r29, implicit %r31, implicit %r30, implicit %r29, implicit %r30, implicit-def %r29, implicit-def %r30
+      %r8 = A2_tfr %r0
+      %r0 = A2_tfr %r2
+      %r6 = L2_loadrub_io %r0, 0
+    }
+    BUNDLE {
+      S2_storerd_io %r29, 8, %d8
+      %p3 = C2_cmpeqi %r6, 61
+      J2_jumpfnewpt %p3, %bb.4, implicit %pc, implicit-def %pc
+    }
+  
+  bb.1 (freq 25):
+    successors: %bb.4(1), %bb.2(2)
+  
+    %r5 = L2_loadri_io %r8, 4
+    BUNDLE {
+      %r15 = A2_tfr %r0
+      %p1 = C2_cmpgtui %r5, 52
+      J2_jumptnewpt %p1, %bb.4, implicit %pc, implicit-def %pc
+    }
+  
+  bb.2 (freq 12):
+    successors: %bb.4(1), %bb.3(2)
+  
+    BUNDLE {
+      %r4 = A2_tfr %r5
+      %r16 = L2_loadri_io %r15, 4
+      S2_storerinew_io %r29, 4, %r16
+    }
+    BUNDLE {
+      %r3 = L2_loadri_io %r29, 4
+      %p2 = S4_ntstbit_r %r16, %r4
+      J2_jumptnew %p2, %bb.4, implicit %pc, implicit-def %pc
+    }
+  
+  bb.3 (freq 8):
+    successors: %bb.4(1)
+  
+    BUNDLE {
+      %r1 = A2_tfr %r4
+      %r9 = A2_tfr %r3
+      %r12 = A2_tfrsi -1
+      L4_isub_memopw_io %r15, 0, 1
+    }
+    %r28 = S4_lsli 1, %r1
+    BUNDLE {
+      %r9 = M4_and_xor %r9, %r28, %r12
+      S2_storerinew_io %r15, 4, %r9
+    }
+  
+  bb.4 (freq 51):
+  
+    BUNDLE {
+      %d8 = L2_loadrd_io %r29, 8
+      L4_return implicit %r30, implicit %r29, implicit %r30, implicit %r31, implicit %pc, implicit-def %r29, implicit-def %r30, implicit-def %r31, implicit-def %pc
+    }
+
+...

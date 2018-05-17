@@ -1,0 +1,44 @@
+--- |
+  ; ModuleID = 'dummy.ll'
+
+...
+---
+name:            glist_tail
+fixedStack:      
+  - { id: 0, offset: -4, size: 4, alignment: 4 }
+stack:           
+  - { id: 0, offset: -8, size: 4, alignment: 1 }
+body:             |
+  bb.0 (freq 12):
+    successors: %bb.2(1), %bb.1(2)
+  
+    S2_allocframe 8, implicit %r29, implicit %r31, implicit %r30, implicit %r29, implicit %r30, implicit-def %r29, implicit-def %r30
+    %r14 = A2_tfr %r0
+    BUNDLE {
+      %r1 = A2_tfr %r0
+      %r5 = A2_tfrsi 0
+      S2_storerinew_io %r29, 4, %r5
+    }
+    BUNDLE {
+      %r13 = A2_tfr %r14
+      %r0 = L2_loadri_io %r29, 4
+    }
+    BUNDLE {
+      %p0 = C2_cmpeqi %r1, 0
+      J2_jumptnew %p0, %bb.2, implicit %pc, implicit-def %pc
+    }
+  
+  bb.1 (freq 255):
+    successors: %bb.1(1), %bb.2(2)
+  
+    BUNDLE {
+      %r0 = A2_tfr %r13
+      %r13 = L2_loadri_io %r13, 8
+      J4_cmpeqi_f_jumpnv_t %r13, 0, %bb.1, implicit %pc, implicit-def %pc
+    }
+  
+  bb.2 (freq 12):
+  
+    L4_return implicit %r30, implicit %r29, implicit %r30, implicit %r31, implicit %pc, implicit-def %r29, implicit-def %r30, implicit-def %r31, implicit-def %pc
+
+...

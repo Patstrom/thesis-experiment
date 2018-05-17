@@ -1,0 +1,65 @@
+--- |
+  ; ModuleID = 'dummy.ll'
+
+...
+---
+name:            reconstruct
+body:             |
+  bb.0 (freq 21):
+    successors: %bb.2(1), %bb.1(2)
+  
+    BUNDLE {
+      %r14 = A2_tfr %r1
+      %r5 = S2_lsr_i_r %r2, 2
+      %r6 = A2_tfr %r1
+    }
+    BUNDLE {
+      %r28 = A2_tfr %r0
+      %r4 = A2_addh_l16_ll %r5, %r14
+      J4_cmpgti_t_jumpnv_t %r4, -1, %bb.2, implicit %pc, implicit-def %pc
+    }
+  
+  bb.1 (freq 8):
+    successors: %bb.3(1)
+  
+    %p1 = C2_cmpeqi %r28, 0
+    BUNDLE {
+      %r13 = C2_cmoveit %p1, 0
+      %r13 = C2_cmoveif %p1, -32768
+      J2_jump %bb.3, implicit %pc, implicit-def %pc
+    }
+  
+  bb.2 (freq 13):
+    successors: %bb.3(1)
+  
+    %r6 = S2_lsr_i_r_acc %r6, %r2, 2
+    BUNDLE {
+      %r0 = A2_tfr %r28
+      %r12 = S2_extractu %r6, 4, 7
+      %r6 = S4_andi_asl_ri 16256, %r6, 7
+    }
+    BUNDLE {
+      %r10 = S2_setbit_i %r6, 14
+      %r1 = A2_subri 14, %r12
+      %p2 = C2_cmpeqi %r0, 0
+    }
+    %r13 = S2_lsr_r_r %r10, %r1
+    %r9 = A2_sxth %r13
+    BUNDLE {
+      %r15 = C2_tfrpr %p2
+      %r1 = A2_addi %r9, -32768
+    }
+    BUNDLE {
+      %p0 = C2_tfrrp %r15
+      %r13 = A2_tfrtnew %p0, %r9
+      %r13 = A2_tfrfnew %p0, %r1
+    }
+  
+  bb.3 (freq 21):
+  
+    BUNDLE {
+      %r0 = A2_tfr %r13
+      JMPret %r31, implicit %r31, implicit %pc, implicit-def %pc
+    }
+
+...

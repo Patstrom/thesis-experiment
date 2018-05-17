@@ -1,0 +1,38 @@
+--- |
+  ; ModuleID = 'dummy.ll'
+
+...
+---
+name:            glist_tail
+body:             |
+  bb.0 (freq 12):
+    successors: %bb.3(1), %bb.1(2)
+  
+    BUNDLE {
+      %p1 = C2_cmpeqi %r0, 0
+      %r3 = A2_tfrsi 0
+      J2_jumptnew %p1, %bb.3, implicit %pc, implicit-def %pc
+    }
+  
+  bb.1 (freq 8):
+    successors: %bb.2(1)
+  
+    %r9 = A2_tfr %r0
+  
+  bb.2 (freq 255):
+    successors: %bb.2(1), %bb.3(2)
+  
+    BUNDLE {
+      %r3 = A2_tfr %r9
+      %r9 = L2_loadri_io %r9, 8
+      J4_cmpeqi_f_jumpnv_t %r9, 0, %bb.2, implicit %pc, implicit-def %pc
+    }
+  
+  bb.3 (freq 12):
+  
+    BUNDLE {
+      %r0 = A2_tfr %r3
+      JMPret %r31, implicit %r31, implicit %pc, implicit-def %pc
+    }
+
+...

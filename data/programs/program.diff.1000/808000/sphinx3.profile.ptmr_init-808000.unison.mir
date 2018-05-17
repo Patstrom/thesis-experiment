@@ -1,0 +1,29 @@
+--- |
+  ; ModuleID = 'dummy.ll'
+
+...
+---
+name:            ptmr_init
+body:             |
+  bb.0 (freq 1):
+  
+    BUNDLE {
+      %r1 = A2_tfr %r0
+      S4_storeiri_io %r0, 36, 0
+      S4_storeiri_io %r0, 28, 0
+    }
+    BUNDLE {
+      S4_storeiri_io %r1, 20, 0
+      S4_storeiri_io %r0, 8, 0
+    }
+    BUNDLE {
+      S4_storeiri_io %r0, 32, 0
+      S4_storeiri_io %r1, 24, 0
+    }
+    BUNDLE {
+      S4_storeiri_io %r1, 16, 0
+      S4_storeiri_io %r0, 12, 0
+      JMPret %r31, implicit %r31, implicit %pc, implicit-def %pc
+    }
+
+...

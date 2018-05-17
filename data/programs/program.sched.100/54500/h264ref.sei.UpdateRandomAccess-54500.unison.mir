@@ -1,0 +1,36 @@
+--- |
+  ; ModuleID = 'dummy.ll'
+
+...
+---
+name:            UpdateRandomAccess
+body:             |
+  bb.0 (freq 1):
+  
+    BUNDLE {
+      %r11 = L4_loadri_abs @img
+      %r4 = A2_tfrsi 256
+      %r8 = A2_tfrsi 1
+    }
+    BUNDLE {
+      %r28 = L2_loadri_io %r11, 24
+      %r6 = A2_tfrsi 0
+    }
+    BUNDLE {
+      %r13 = A2_tfr %r6
+      %p1 = C2_cmpeqi %r28, 2
+      %r6 = A2_tfrtnew %p1, %r8
+      %r6 = A2_tfrfnew %p1, %r6
+    }
+    BUNDLE {
+      S2_allocframe 0, implicit %r29, implicit %r31, implicit %r30, implicit %r29, implicit %r30, implicit-def %r29, implicit-def %r30
+      S4_pstorerht_abs %p1, @seiRandomAccess, %r4
+      %r9 = A2_tfr %r6
+    }
+    BUNDLE {
+      S4_pstorerbt_abs %p1, @seiRandomAccess+2, %r13
+      S2_storerbabs @seiHasRandomAccess_info, %r9
+    }
+    L4_return implicit %r30, implicit %r29, implicit %r30, implicit %r31, implicit %pc, implicit-def %r29, implicit-def %r30, implicit-def %r31, implicit-def %pc
+
+...

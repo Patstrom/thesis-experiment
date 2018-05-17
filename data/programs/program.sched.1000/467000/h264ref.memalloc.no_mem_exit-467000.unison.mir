@@ -1,0 +1,41 @@
+--- |
+  ; ModuleID = 'dummy.ll'
+
+...
+---
+name:            no_mem_exit
+fixedStack:      
+  - { id: 0, offset: -4, size: 4, alignment: 4 }
+  - { id: 1, offset: -8, size: 4, alignment: 4 }
+stack:           
+  - { id: 0, offset: -12, size: 4, alignment: 4 }
+  - { id: 1, offset: -16, size: 4, alignment: 1 }
+body:             |
+  bb.0 (freq 1):
+  
+    BUNDLE {
+      S2_storeri_io %r29, -12, %r0
+      %r12 = A2_tfrsi @errortext
+    }
+    BUNDLE {
+      %r0 = L2_loadri_io %r29, -12
+      S2_storeri_io %r29, -16, %r12
+      %r1 = A2_tfrsi 300
+    }
+    BUNDLE {
+      S2_allocframe 16, implicit %r29, implicit %r31, implicit %r30, implicit %r29, implicit %r30, implicit-def %r29, implicit-def %r30
+      %r2 = A2_tfrsi @.str.20
+    }
+    BUNDLE {
+      S2_storeri_io %r29, 0, %r0
+      %r0 = A2_tfr %r12
+      J2_call @snprintf, implicit %d0, implicit %d1, implicit %d2, implicit %d3, implicit %d4, implicit %d5, implicit %d6, implicit %d7, implicit %r28, implicit %r31, implicit %p0, implicit %p1, implicit %p2, implicit %p3, implicit %m0, implicit %m1, implicit %lc0, implicit %lc1, implicit %sa0, implicit %sa1, implicit %usr, implicit %usr_ovf, implicit-def %d0, implicit-def %d1, implicit-def %d2, implicit-def %d3, implicit-def %d4, implicit-def %d5, implicit-def %d6, implicit-def %d7, implicit-def %r28, implicit-def %r31, implicit-def %p0, implicit-def %p1, implicit-def %p2, implicit-def %p3, implicit-def %m0, implicit-def %m1, implicit-def %lc0, implicit-def %lc1, implicit-def %sa0, implicit-def %sa1, implicit-def %usr, implicit-def %usr_ovf
+    }
+    BUNDLE {
+      %r1 = A2_tfrsi 100
+      %r0 = L2_loadri_io %r29, 8
+      L2_deallocframe implicit %r30, implicit %r29, implicit %r30, implicit %r31, implicit-def %r29, implicit-def %r30, implicit-def %r31
+      J2_jump @error, implicit %pc, implicit-def %pc
+    }
+
+...

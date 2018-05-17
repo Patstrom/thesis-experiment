@@ -1,0 +1,35 @@
+--- |
+  ; ModuleID = 'dummy.ll'
+
+...
+---
+name:            get_last_player
+body:             |
+  bb.0 (freq 3):
+    successors: %bb.2(1), %bb.1(2)
+  
+    BUNDLE {
+      %r5 = L4_loadri_abs @move_history_pointer
+      %r14 = A2_tfrsi 0
+    }
+    BUNDLE {
+      %r28 = A2_tfr %r5
+      %p3 = C2_cmpeqi %r5, 0
+      %r15 = A2_tfr %r14
+      J2_jumptnew %p3, %bb.2, implicit %pc, implicit-def %pc
+    }
+  
+  bb.1 (freq 2):
+    successors: %bb.2(1)
+  
+    %r28 = S4_addi_asl_ri @move_history_color, %r28, 2
+    %r15 = L2_loadri_io %r28, -4
+  
+  bb.2 (freq 3):
+  
+    BUNDLE {
+      %r0 = A2_tfr %r15
+      JMPret %r31, implicit %r31, implicit %pc, implicit-def %pc
+    }
+
+...

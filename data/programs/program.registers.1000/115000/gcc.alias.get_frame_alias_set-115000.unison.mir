@@ -1,0 +1,50 @@
+--- |
+  ; ModuleID = 'dummy.ll'
+
+...
+---
+name:            get_frame_alias_set
+body:             |
+  bb.0 (freq 17):
+    successors: %bb.4(1), %bb.1(2)
+  
+    BUNDLE {
+      %r13 = L4_loadri_abs @get_frame_alias_set.set
+      J4_cmpeqi_f_jumpnv_t %r13, -1, %bb.4, implicit %pc, implicit-def %pc
+    }
+  
+  bb.1 (freq 6):
+    successors: %bb.3(1), %bb.2(2)
+  
+    BUNDLE {
+      %r13 = L4_loadri_abs @flag_strict_aliasing
+      %r11 = A2_tfrsi 0
+      J4_cmpeqi_t_jumpnv_nt %r13, 0, %bb.3, implicit %pc, implicit-def %pc
+    }
+  
+  bb.2 (freq 4):
+    successors: %bb.3(1)
+  
+    %r2 = L4_loadri_abs @new_alias_set.last_alias_set
+    BUNDLE {
+      %r11 = A2_addi %r2, 1
+      S2_storerinewabs @new_alias_set.last_alias_set, %r11
+    }
+  
+  bb.3 (freq 6):
+    successors: %bb.4(1)
+  
+    BUNDLE {
+      %r10 = A2_tfr %r11
+      %r13 = A2_tfr %r11
+      S2_storerinewabs @get_frame_alias_set.set, %r10
+    }
+  
+  bb.4 (freq 17):
+  
+    BUNDLE {
+      %r0 = A2_tfr %r13
+      JMPret %r31, implicit %r31, implicit %pc, implicit-def %pc
+    }
+
+...

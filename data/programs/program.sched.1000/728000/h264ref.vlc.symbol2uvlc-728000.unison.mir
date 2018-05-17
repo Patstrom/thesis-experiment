@@ -1,0 +1,42 @@
+--- |
+  ; ModuleID = 'dummy.ll'
+
+...
+---
+name:            symbol2uvlc
+fixedStack:      
+  - { id: 0, offset: -4, size: 4, alignment: 4 }
+stack:           
+  - { id: 0, offset: -8, size: 4, alignment: 1 }
+body:             |
+  bb.0 (freq 1):
+  
+    %r1 = L2_loadri_io %r0, 12
+    BUNDLE {
+      S2_allocframe 8, implicit %r29, implicit %r31, implicit %r30, implicit %r29, implicit %r30, implicit-def %r29, implicit-def %r30
+      %r1 = S2_lsr_i_r_acc %r1, %r1, 31
+      %r10 = A2_tfrsi 1
+    }
+    BUNDLE {
+      %r9 = S2_asr_i_r %r1, 1
+      %r1 = L2_loadri_io %r0, 16
+      %r5 = A2_tfrsi -1
+    }
+    BUNDLE {
+      %r5 = S2_asl_r_r_acc %r5, %r10, %r9
+      %r20 = A2_tfrsi 0
+      S2_storerinew_io %r29, 4, %r20
+    }
+    BUNDLE {
+      %r11 = A2_tfr %r0
+      %r4 = A2_and %r5, %r1
+      %r0 = L2_loadri_io %r29, 4
+      L2_deallocframe implicit %r30, implicit %r29, implicit %r30, implicit %r31, implicit-def %r29, implicit-def %r30, implicit-def %r31
+    }
+    BUNDLE {
+      %r10 = S2_setbit_r %r4, %r9
+      S2_storerinew_io %r11, 20, %r10
+      JMPret %r31, implicit %r31, implicit %pc, implicit-def %pc
+    }
+
+...

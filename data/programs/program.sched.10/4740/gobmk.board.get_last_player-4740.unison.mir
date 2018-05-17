@@ -1,0 +1,46 @@
+--- |
+  ; ModuleID = 'dummy.ll'
+
+...
+---
+name:            get_last_player
+fixedStack:      
+  - { id: 0, offset: -8, size: 8, alignment: 8 }
+  - { id: 1, offset: -12, size: 4, alignment: 4 }
+stack:           
+  - { id: 0, offset: -16, size: 4, alignment: 1 }
+body:             |
+  bb.0 (freq 3):
+    successors: %bb.2(1), %bb.1(2)
+  
+    BUNDLE {
+      S2_allocframe 16, implicit %r29, implicit %r31, implicit %r30, implicit %r29, implicit %r30, implicit-def %r29, implicit-def %r30
+      %r5 = A2_tfrsi 0
+      %r14 = L4_loadri_abs @move_history_pointer
+    }
+    BUNDLE {
+      %r11 = L4_loadri_abs @move_history_pointer
+      S2_storeri_io %r29, 4, %r5
+    }
+    BUNDLE {
+      S2_storerd_io %r29, 8, %d8
+      %p2 = C2_cmpeqi %r11, 0
+      %r3 = L2_loadri_io %r29, 4
+      J2_jumptnew %p2, %bb.2, implicit %pc, implicit-def %pc
+    }
+  
+  bb.1 (freq 2):
+    successors: %bb.2(1)
+  
+    %r14 = S4_addi_asl_ri @move_history_color, %r14, 2
+    %r3 = L2_loadri_io %r14, -4
+  
+  bb.2 (freq 3):
+  
+    BUNDLE {
+      %r0 = A2_tfr %r3
+      %d8 = L2_loadrd_io %r29, 8
+      L4_return implicit %r30, implicit %r29, implicit %r30, implicit %r31, implicit %pc, implicit-def %r29, implicit-def %r30, implicit-def %r31, implicit-def %pc
+    }
+
+...

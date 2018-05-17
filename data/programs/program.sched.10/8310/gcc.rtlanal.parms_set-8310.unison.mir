@@ -1,0 +1,65 @@
+--- |
+  ; ModuleID = 'dummy.ll'
+
+...
+---
+name:            parms_set
+body:             |
+  bb.0 (freq 51):
+    successors: %bb.4(1), %bb.1(2)
+  
+    BUNDLE {
+      %r12 = A2_tfr %r2
+      %r9 = L2_loadrub_io %r0, 0
+    }
+    BUNDLE {
+      %r3 = A2_tfr %r0
+      %p0 = C2_cmpeqi %r9, 61
+      %r14 = A2_tfr %r12
+      J2_jumpfnewpt %p0, %bb.4, implicit %pc, implicit-def %pc
+    }
+  
+  bb.1 (freq 25):
+    successors: %bb.4(1), %bb.2(2)
+  
+    BUNDLE {
+      %r28 = A2_tfr %r14
+      %r7 = L2_loadri_io %r3, 4
+    }
+    BUNDLE {
+      %p3 = C2_cmpgtui %r7, 52
+      J2_jumptnewpt %p3, %bb.4, implicit %pc, implicit-def %pc
+    }
+  
+  bb.2 (freq 12):
+    successors: %bb.4(1), %bb.3(2)
+  
+    BUNDLE {
+      %r14 = A2_tfr %r28
+      %r11 = L2_loadri_io %r28, 4
+    }
+    BUNDLE {
+      %r6 = A2_tfr %r14
+      %p3 = S4_ntstbit_r %r11, %r7
+      J2_jumptnew %p3, %bb.4, implicit %pc, implicit-def %pc
+    }
+  
+  bb.3 (freq 8):
+    successors: %bb.4(1)
+  
+    BUNDLE {
+      %r0 = A2_tfr %r6
+      %r9 = S4_lsli 1, %r7
+      %r10 = A2_tfrsi -1
+      L4_isub_memopw_io %r6, 0, 1
+    }
+    BUNDLE {
+      %r11 = M4_and_xor %r11, %r9, %r10
+      S2_storerinew_io %r0, 4, %r11
+    }
+  
+  bb.4 (freq 51):
+  
+    JMPret %r31, implicit %r31, implicit %pc, implicit-def %pc
+
+...

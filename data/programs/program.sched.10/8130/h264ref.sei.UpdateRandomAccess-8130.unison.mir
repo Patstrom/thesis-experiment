@@ -1,0 +1,43 @@
+--- |
+  ; ModuleID = 'dummy.ll'
+
+...
+---
+name:            UpdateRandomAccess
+fixedStack:      
+  - { id: 0, offset: -4, size: 4, alignment: 4 }
+stack:           
+  - { id: 0, offset: -8, size: 4, alignment: 1 }
+body:             |
+  bb.0 (freq 1):
+  
+    BUNDLE {
+      S2_allocframe 8, implicit %r29, implicit %r31, implicit %r30, implicit %r29, implicit %r30, implicit-def %r29, implicit-def %r30
+      %r3 = L4_loadri_abs @img
+      %r4 = A2_tfrsi 1
+    }
+    BUNDLE {
+      %r1 = L2_loadri_io %r3, 24
+      %r13 = A2_tfrsi 0
+      %r12 = A2_tfrsi 256
+    }
+    BUNDLE {
+      S2_storeri_io %r29, 4, %r13
+      %p0 = C2_cmpeqi %r1, 2
+      %r5 = A2_tfr %r13
+    }
+    BUNDLE {
+      S4_pstorerht_abs %p0, @seiRandomAccess, %r12
+      %r6 = L2_loadri_io %r29, 4
+    }
+    BUNDLE {
+      S4_pstorerbt_abs %p0, @seiRandomAccess+2, %r6
+      %r4 = C2_mux %p0, %r4, %r5
+      L2_deallocframe implicit %r30, implicit %r29, implicit %r30, implicit %r31, implicit-def %r29, implicit-def %r30, implicit-def %r31
+    }
+    BUNDLE {
+      S2_storerbabs @seiHasRandomAccess_info, %r4
+      JMPret %r31, implicit %r31, implicit %pc, implicit-def %pc
+    }
+
+...

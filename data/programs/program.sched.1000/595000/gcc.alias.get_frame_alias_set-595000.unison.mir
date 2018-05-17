@@ -1,0 +1,69 @@
+--- |
+  ; ModuleID = 'dummy.ll'
+
+...
+---
+name:            get_frame_alias_set
+fixedStack:      
+  - { id: 0, offset: -8, size: 8, alignment: 8 }
+  - { id: 1, offset: -12, size: 4, alignment: 4 }
+stack:           
+  - { id: 0, offset: -16, size: 4, alignment: 1 }
+body:             |
+  bb.0 (freq 17):
+    successors: %bb.4(1), %bb.1(2)
+  
+    BUNDLE {
+      %r2 = L4_loadri_abs @get_frame_alias_set.set
+      %r0 = L4_loadri_abs @get_frame_alias_set.set
+    }
+    BUNDLE {
+      S2_allocframe 16, implicit %r29, implicit %r31, implicit %r30, implicit %r29, implicit %r30, implicit-def %r29, implicit-def %r30
+      S2_storerd_io %r29, -16, %d8
+      %p1 = C2_cmpeqi %r2, -1
+      J2_jumpfnewpt %p1, %bb.4, implicit %pc, implicit-def %pc
+    }
+  
+  bb.1 (freq 6):
+    successors: %bb.3(1), %bb.2(2)
+  
+    BUNDLE {
+      %r10 = L4_loadri_abs @flag_strict_aliasing
+      %r11 = A2_tfrsi 0
+      J4_cmpeqi_t_jumpnv_nt %r10, 0, %bb.3, implicit %pc, implicit-def %pc
+    }
+  
+  bb.2 (freq 4):
+    successors: %bb.3(1)
+  
+    %r14 = L4_loadri_abs @new_alias_set.last_alias_set
+    BUNDLE {
+      %r17 = A2_addi %r14, 1
+      S2_storerinew_io %r29, 4, %r17
+    }
+    BUNDLE {
+      %r8 = A2_tfr %r17
+      S2_storerinewabs @new_alias_set.last_alias_set, %r8
+      %r11 = L2_loadri_io %r29, 4
+    }
+  
+  bb.3 (freq 6):
+    successors: %bb.4(1)
+  
+    BUNDLE {
+      %r3 = A2_tfr %r11
+      %r1 = A2_tfr %r11
+    }
+    BUNDLE {
+      S2_storeriabs @get_frame_alias_set.set, %r1
+      %r0 = A2_tfr %r3
+    }
+  
+  bb.4 (freq 17):
+  
+    BUNDLE {
+      %d8 = L2_loadrd_io %r29, 8
+      L4_return implicit %r30, implicit %r29, implicit %r30, implicit %r31, implicit %pc, implicit-def %r29, implicit-def %r30, implicit-def %r31, implicit-def %pc
+    }
+
+...
