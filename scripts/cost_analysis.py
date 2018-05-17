@@ -1,5 +1,6 @@
 import os
 from matplotlib import pyplot as plt
+import sys
 
 def read_version_cost(version):
     with open( os.path.join(version, "cost") ) as p:
@@ -16,13 +17,16 @@ def read_program_costs(program):
         costs.append( read_version_cost( os.path.join(program, f) ) )
     return costs
 
+root_dir = sys.argv[1]
+output_dir = sys.argv[2]
+
 costs = []
 labels = []
-all_strategies = [d for d in os.listdir("programs")]
+all_strategies = [d for d in os.listdir(root_dir)]
 all_strategies.sort()
 for dirs in all_strategies:
-    program_cost =  read_program_costs( os.path.join("programs", dirs) ) 
-    costs.append( read_program_costs( os.path.join("programs", dirs) ) )
+    program_cost =  read_program_costs( os.path.join(root_dir, dirs) )
+    costs.append( read_program_costs( os.path.join(root_dir, dirs) ) )
     labels.append( dirs[dirs.index("."):] )
 
 fig = plt.figure()
@@ -36,5 +40,5 @@ bp.set_ylabel("cost")
 xtickNames = plt.setp(bp, xticklabels=labels)
 plt.setp(xtickNames, rotation=45, fontsize=8)
 
-
+plt.savefig(os.path.join(output_dir, "cost.png"))
 plt.show()
