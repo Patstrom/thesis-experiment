@@ -10,19 +10,20 @@ The data directory contains all generated function versions in the following str
 ```
 .
 +-- data/
- | +-- program.<strat>.<rate>
- |  | +-- <version_number>/
- |  |  | +-- <function_name>-<rate>.unison.mir
- |  |  | +-- cost
- |  |  | +-- gadgets
- |  | +-- <version_number>/
- |  |  | +-- <function_name>-<rate>.unison.mir
- |  |  | +-- cost
- |  |  | +-- gadgets
- |  | +-- <version_number>/
- |  |  | +-- <function_name>-<rate>.unison.mir
- |  |  | +-- cost
- |  |  | +-- gadgets
+ | +-- programs/
+ |  | +-- program.<strat>.<rate>
+ |  |  | +-- <version_number>/
+ |  |  |  | +-- <function_name>-<rate>.unison.mir
+ |  |  |  | +-- cost
+ |  |  |  | +-- gadgets
+ |  |  | +-- <version_number>/
+ |  |  |  | +-- <function_name>-<rate>.unison.mir
+ |  |  |  | +-- cost
+ |  |  |  | +-- gadgets
+ |  |  | +-- <version_number>/
+ |  |  |  | +-- <function_name>-<rate>.unison.mir
+ |  |  |  | +-- cost
+ |  |  |  | +-- gadgets
 ```
 
 And so on. `<function_name>`, `<rate>`, `<version_number>` and `<strat>` are of course replaced
@@ -54,8 +55,14 @@ It is written in Rust and the easiest way to run it is through Cargo:
 cargo run --release program.<strat>.<rate>
 ```
 
+For convenience the is a `mir_directory.sh` script to which you can give the `data/programs`
+directory and it will run the command on all directories in that directory.
+
 #### cost\_analysis
 A python script to generate the boxplots visualizing the estimated cost of each program
 
 #### gadget\_analysis
 A python script to generate the bar graphs that visualizes frequence of gadgets in programs
+
+### Plots
+
