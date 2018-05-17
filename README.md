@@ -66,3 +66,7 @@ A python script to generate the bar graphs that visualizes frequence of gadgets 
 
 ### Plots
 
+#### cost.png
+
+Shows the distribution of the program versions broken down by strategy and sampling rate.
+Also juxtaposes the cost of the regular LLVM solution and the Unison optimal solution.
