@@ -27,15 +27,16 @@ impl Config {
     }
 }
 
-
 pub fn run(config: Config) -> Result<(), Box<Error>> {
     // The given directory contains all versions of the program
     let root = fs::read_dir(&config.directory)?;
+    let mut output_file_name = path::PathBuf::from(config.directory);
+    output_file_name.push("gadget_occurences");
 
+    let mut gadgets = Vec::new();
+    let mut program_count = 0;
     // Each sub-directory is a version of the program
     for version in root.map(|dir| dir.expect("IO error").path()).filter(|path| path.is_dir()) {
-        let mut output_file_name = path::PathBuf::from(version.clone());
-        output_file_name.push("gadgets");
 
         // Find all functions in the directory
         let files = fs::read_dir(version)?;
@@ -50,16 +51,22 @@ pub fn run(config: Config) -> Result<(), Box<Error>> {
 
         // Find the gadgets and write them to file
         let program = program::read_program(raw)?;
-        let gadgets = program.gadgets();
-
-        let output_file_handle = fs::OpenOptions::new()
-            .create(true)
-            .truncate(true) // Always overwrite the old stuff
-            .write(true)
-            .open(output_file_name)
-            .unwrap();
-        serde_json::to_writer(output_file_handle, &gadgets)?;
+        gadgets.extend(program.gadgets());
+        program_count += 1;
     }
+
+    let occurences: Vec<f64> = gadgets.iter()
+        .map( |x| gadgets.iter().filter(|&y| x == y).count() )
+        .map( |x| ((x as f64 / program_count as f64) * 100.0) as f64)
+        .collect();
+
+    let output_file_handle = fs::OpenOptions::new()
+        .create(true)
+        .truncate(true)
+        .write(true)
+        .open(output_file_name)
+        .unwrap();
+    serde_json::to_writer(output_file_handle, &occurences)?;
 
     Ok(())
 }
