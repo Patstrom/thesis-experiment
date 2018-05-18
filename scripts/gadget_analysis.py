@@ -1,32 +1,63 @@
-import os
+import os, sys
 from matplotlib import pyplot as plt
+from matplotlib import ticker as mtick
 import numpy as np
 import json
 
-def read_version_gadgets(version):
-    with open( os.path.join(version, "gadgets") ) as p:
-        gadgets = json.load(p)
-    return gadgets
+def read_program_gadgets_information(program):
+    if os.path.isdir(program):
+        with open( os.path.join(program, "gadget_occurences") ) as p:
+            return json.load(p) # It's a list
 
-def read_program_gadgets(program):
-    gadgets = []
-    for f in os.listdir(program):
-        gadgets.append( read_version_gadgets( os.path.join(program, f) ) )
-    return gadgets
 
-a = read_program_gadgets(os.path.join("programs", "program.diff.1"))
-flat_a = [item for sublist in a for item in sublist]
-ratio_a = [flat_a.count(item) / len(flat_a) for item in flat_a]
-ratio_a.sort(reverse=True)
-ids = [x for x in range(len(ratio_a))]
 
-fig = plt.figure()
-fig.suptitle("Occurence ratio for every gadget")
+root_dir = sys.argv[1]
+output_dir = sys.argv[2]
 
-b = fig.add_subplot(111)
-#b.hist(percentage_a, bins, histtype='bar', rwidth=0.5)
-b.bar(ids, ratio_a)
+rows = ["1", "10", "100", "1000"]
+columns = ["diff", "registers", "sched"]
 
-b.set_ylabel("ratio")
+# Format
+fig, axarr = plt.subplots(4, 3, sharey=True, sharex=True)
 
-plt.show()
+pad = 15
+# Add column title
+for ax, col in zip(axarr[0], columns):
+    ax.set_title(
+            {
+                "diff": "enum",
+                "registers": "registers",
+                "sched": "schedule"
+            }[col], pad=pad)
+
+# Add the row labels and annotations
+for ax, row in zip(axarr[:,0], rows):
+    ax.set_ylabel(row, rotation=0, size='large', labelpad=pad)
+
+# Remove x-ticks. They don't say anything
+# Format yaxis as percentage
+for ax in fig.axes:
+    #ax.xaxis.set_visible(False)
+    ax.yaxis.set_major_formatter(mtick.PercentFormatter())
+
+
+# Get the actual data
+for programs in os.listdir(root_dir):
+    try:
+        pieces = programs.split(".")
+        strat, rate = pieces[1], pieces[2]
+        row, column = rows.index(rate), columns.index(strat)
+    except Exception as e:
+        print(e)
+        continue
+    print("Processing {}.{}".format(strat, rate))
+    data = read_program_gadgets_information(os.path.join(root_dir, programs))
+    data.sort(reverse=True)
+    ids = [x for x in range(len(data))]
+
+    axarr[row][column].bar(ids, data)
+
+# Save it
+fig.tight_layout()
+fig.set_size_inches(11.69,8.27)
+plt.savefig(os.path.join(output_dir, "gadgets.png"))
