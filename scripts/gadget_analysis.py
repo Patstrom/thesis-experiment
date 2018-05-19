@@ -48,7 +48,7 @@ for programs in os.listdir(root_dir):
         strat, rate = pieces[1], pieces[2]
         row, column = rows.index(rate), columns.index(strat)
     except Exception as e:
-        print(e)
+        print("\"{}\" is not in the expected format \"program.<strat>.<rate>\"".format(programs))
         continue
     print("Processing {}.{}".format(strat, rate))
     data = read_program_gadgets_information(os.path.join(root_dir, programs))
