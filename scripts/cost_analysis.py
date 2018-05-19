@@ -14,7 +14,8 @@ def read_version_cost(version):
 def read_program_costs(program):
     costs = []
     for f in os.listdir(program):
-        costs.append( read_version_cost( os.path.join(program, f) ) )
+        if os.path.isdir(os.path.join(program, f)):
+            costs.append( read_version_cost( os.path.join(program, f) ) )
     return costs
 
 root_dir = sys.argv[1]
@@ -22,12 +23,18 @@ output_dir = sys.argv[2]
 
 costs = []
 labels = []
+llvm_cost = 0
 all_strategies = [d for d in os.listdir(root_dir)]
 all_strategies.sort()
 for dirs in all_strategies:
-    program_cost =  read_program_costs( os.path.join(root_dir, dirs) )
-    costs.append( read_program_costs( os.path.join(root_dir, dirs) ) )
-    labels.append( dirs[dirs.index("."):] )
+    if dirs == "llvm":
+        costs.append( [read_version_cost( os.path.join(root_dir, dirs) )] )
+        labels.append("llvm")
+        continue
+
+    if os.path.isdir(os.path.join(root_dir, dirs)):
+        costs.append( read_program_costs( os.path.join(root_dir, dirs) ) )
+        labels.append( dirs[dirs.index("."):] )
 
 fig = plt.figure()
 fig.suptitle("Estimated cost of each program")
