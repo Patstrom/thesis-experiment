@@ -11,19 +11,21 @@ The data directory contains all generated function versions in the following str
 .
 +-- data/
  | +-- programs/
- |  | +-- program.<strat>.<rate>
- |  |  | +-- <version_number>/
- |  |  |  | +-- <function_name>-<rate>.unison.mir
- |  |  |  | +-- cost
- |  |  |  | +-- gadgets
- |  |  | +-- <version_number>/
- |  |  |  | +-- <function_name>-<rate>.unison.mir
- |  |  |  | +-- cost
- |  |  |  | +-- gadgets
- |  |  | +-- <version_number>/
- |  |  |  | +-- <function_name>-<rate>.unison.mir
- |  |  |  | +-- cost
- |  |  |  | +-- gadgets
+ | | +-- llvm/
+ | | | +-- cost
+ | | +-- program.<strat>.<rate>
+ | | | +-- gadget_occurences
+ | | | +-- <version_number>/
+ | | | | +-- <function_name>-<rate>.unison.mir
+ | | | | +-- cost
+ | | | +-- <version_number>/
+ | | | | +-- <function_name>-<rate>.unison.mir
+ | | | | +-- cost
+ | | | | +-- gadgets
+ | | | +-- <version_number>/
+ | | | | +-- <function_name>-<rate>.unison.mir
+ | | | | +-- cost
+ | | | | +-- gadgets
 ```
 
 And so on. `<function_name>`, `<rate>`, `<version_number>` and `<strat>` are of course replaced
@@ -36,11 +38,13 @@ The strategy refered to as `enumerate` in the thesis is called `diff`, `schedule
 The sampling rates used are `1`, `10`, `100` and `1000`.
 
 The `cost` file contains one key-value pair of <function_name> and cost (in cycles) on every
-line. The `gadgets` file contains a json-serialized list of all gadgets present in the
-program.
+line. The `gadget_occurences` file contains a list of ratios where index 0 represents
+the percentage of programs gadget 0 is present in. It's calculated by making a list of
+all gadgets across all versions, flattening it and counting occurences of every gadget,
+divide the count by the number of programs and multiply by 100.
 
-Note that the `cost` file is written during the data generation phase while the `gadgets`
-file must be generated afterwards. All respective `gadgets` files are present in this repository
+Note that the `cost` file is written during the data generation phase while the `gadget_occurences`
+file must be generated afterwards. All respective `gadget_occurences` files are present in this repository
 
 ### Scripts
 
@@ -70,3 +74,8 @@ A python script to generate the bar graphs that visualizes frequence of gadgets 
 
 Shows the distribution of the program versions broken down by strategy and sampling rate.
 Also juxtaposes the cost of the regular LLVM solution and the Unison optimal solution.
+
+#### gadgets.png
+Shows a grid of barplots where each plot shows the gadget-breaking properties of a
+strategy and sampling rate. Each bar represent a gadget and the y-value is the ratio of
+programs that gadget is present. The x-value is just an id and does not represent anything.
