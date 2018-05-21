@@ -25,7 +25,7 @@ pad = 15
 for ax, col in zip(axarr[0], columns):
     ax.set_title(
             {
-                "diff": "enum",
+                "diff": "enumerate",
                 "registers": "registers",
                 "sched": "schedule"
             }[col], pad=pad)
@@ -55,9 +55,10 @@ for programs in os.listdir(root_dir):
     data.sort(reverse=True)
     ids = [x for x in range(len(data))]
 
-    axarr[row][column].bar(ids, data)
+    axarr[row][column].bar(ids, data, width=0.4, color="xkcd:burnt orange", snap=False)
 
 # Save it
 fig.tight_layout()
-fig.set_size_inches(11.69,8.27)
+fig.set_size_inches(5.11911*1.1,8.26933*1.1) # The \textwidth and \textheight from latex scaled up slightly
+
 plt.savefig(os.path.join(output_dir, "gadgets.png"))
