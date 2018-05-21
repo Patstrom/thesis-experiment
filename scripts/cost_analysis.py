@@ -46,6 +46,7 @@ bp.set_ylabel("cost")
 xtickNames = plt.setp(bp, xticklabels=labels)
 plt.setp(xtickNames, rotation=45, fontsize=8)
 
-plt.axhline(y=llvm_cost, color="g", linestyle=":")
+plt.axhline(y=llvm_cost, color="r", linestyle=":", label="llvm cost")
+plt.legend()
 
 plt.savefig(os.path.join(output_dir, "cost.png"))
