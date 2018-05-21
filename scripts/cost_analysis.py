@@ -33,21 +33,21 @@ for dirs in all_strategies:
 
     if os.path.isdir(os.path.join(root_dir, dirs)):
         costs.append( read_program_costs( os.path.join(root_dir, dirs) ) )
-        labels.append( dirs[dirs.index("."):] )
+        labels.append( dirs[dirs.index("."):].replace("diff", "enumerate").replace("sched", "schedule") )
 
 fig = plt.figure()
-fig.suptitle("Estimated cost of each program")
-fig.set_size_inches(8,7)
+fig.set_size_inches(10,8)
 
 bp = fig.add_subplot(111)
 bp.boxplot(costs)
 
 # Set labels
-bp.set_ylabel("cost")
+bp.set_ylabel("Estimated cost (in cycles)")
 xtickNames = plt.setp(bp, xticklabels=labels)
 plt.setp(xtickNames, rotation=45, fontsize=8)
 
 plt.axhline(y=llvm_cost, color="r", linestyle=":", label="llvm cost")
 plt.legend()
+fig.tight_layout()
 
 plt.savefig(os.path.join(output_dir, "cost.png"))
