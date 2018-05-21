@@ -33,10 +33,10 @@ for dirs in all_strategies:
 
     if os.path.isdir(os.path.join(root_dir, dirs)):
         costs.append( read_program_costs( os.path.join(root_dir, dirs) ) )
-        labels.append( dirs[dirs.index("."):].replace("diff", "enumerate").replace("sched", "schedule") )
+        labels.append( dirs[dirs.index(".")+1:].replace("diff", "enumerate").replace("sched", "schedule") )
 
 fig = plt.figure()
-fig.set_size_inches(10,8)
+#fig.set_size_inches(5.11911*1.1,8.26933*1.1*0.5) # The \textwidth and \textheight from latex scaled up slightly
 
 bp = fig.add_subplot(111)
 bp.boxplot(costs)
