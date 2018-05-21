@@ -37,6 +37,7 @@ for dirs in all_strategies:
 
 fig = plt.figure()
 fig.suptitle("Estimated cost of each program")
+fig.set_size_inches(8,7)
 
 bp = fig.add_subplot(111)
 bp.boxplot(costs)
