@@ -44,7 +44,7 @@ pub fn run(config: Config) -> Result<(), Box<Error>> {
         for file in files.map(|file| file.expect("IO error").path())
             .filter(|path| path.is_file()) {
                 let file_name = file.file_name().expect(&format!("Couldn't find name of file for {:?}", file));
-                if file_name != "cost" && file_name != "gadgets" {
+                if file_name != "cost" {
                     raw.push( file.clone() );
                 }
         }
