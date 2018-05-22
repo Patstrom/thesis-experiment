@@ -64,6 +64,7 @@ directory and it will run the command on all directories in that directory.
 
 #### cost\_analysis
 A python script to generate the boxplots visualizing the estimated cost of each program
+and the table comparing the cost of schedule to LLVM.
 
 #### gadget\_analysis
 A python script to generate the bar graphs that visualizes frequence of gadgets in programs
@@ -79,3 +80,7 @@ Also juxtaposes the cost of the regular LLVM solution and the Unison optimal sol
 Shows a grid of barplots where each plot shows the gadget-breaking properties of a
 strategy and sampling rate. Each bar represent a gadget and the y-value is the ratio of
 programs that gadget is present. The x-value is just an id and does not represent anything.
+
+#### sched_perf.tex
+A latex-formatted table showing the cost of the schedule strategy compared to the LLVM
+cost.
