@@ -1,5 +1,7 @@
 import os
 from matplotlib import pyplot as plt
+import numpy as np
+import csv
 import sys
 
 def read_version_cost(version):
@@ -24,6 +26,7 @@ output_dir = sys.argv[2]
 costs = []
 labels = []
 llvm_cost = 0
+schedule_median_cost = {}
 all_strategies = [d for d in os.listdir(root_dir)]
 all_strategies.sort()
 for dirs in all_strategies:
@@ -36,6 +39,9 @@ for dirs in all_strategies:
         program_label = dirs[dirs.index(".")+1:].replace("diff", "enumerate").replace("sched", "schedule")
         costs.append( program_cost )
         labels.append( program_label )
+
+        if "sched" in program_label:
+            schedule_median_cost[program_label] = np.median(program_cost)
 
 fig = plt.figure()
 #fig.set_size_inches(5.11911*1.1,8.26933*1.1*0.5) # The \textwidth and \textheight from latex scaled up slightly
@@ -53,3 +59,11 @@ plt.legend()
 fig.tight_layout()
 
 plt.savefig(os.path.join(output_dir, "cost.png"))
+
+with open(os.path.join(output_dir, 'sched_perf.csv'), 'w+', newline='',) as csvfile:
+    writer = csv.writer(csvfile, delimiter=',')
+    headers = ["rate", "cost", "difference", "overhead"]
+    writer.writerow(headers)
+    for label, cost in schedule_median_cost.items():
+        row = [label[label.rfind(".")+1:], int(cost), int(cost - llvm_cost), "{0:.6f}‰".format( ( float(cost) / llvm_cost - 1) * 1000 ) ]
+        writer.writerow(row)
