@@ -28,18 +28,20 @@ all_strategies = [d for d in os.listdir(root_dir)]
 all_strategies.sort()
 for dirs in all_strategies:
     if dirs == "llvm":
-        llvm_cost = [read_version_cost( os.path.join(root_dir, dirs) )]
+        llvm_cost = read_version_cost( os.path.join(root_dir, dirs) )
         continue
 
     if os.path.isdir(os.path.join(root_dir, dirs)):
-        costs.append( read_program_costs( os.path.join(root_dir, dirs) ) )
-        labels.append( dirs[dirs.index(".")+1:].replace("diff", "enumerate").replace("sched", "schedule") )
+        program_cost = read_program_costs( os.path.join(root_dir, dirs) )
+        program_label = dirs[dirs.index(".")+1:].replace("diff", "enumerate").replace("sched", "schedule")
+        costs.append( program_cost )
+        labels.append( program_label )
 
 fig = plt.figure()
 #fig.set_size_inches(5.11911*1.1,8.26933*1.1*0.5) # The \textwidth and \textheight from latex scaled up slightly
 
 bp = fig.add_subplot(111)
-bp.boxplot(costs)
+bp.boxplot(costs, whis="range")
 
 # Set labels
 bp.set_ylabel("Estimated cost (in cycles)")
