@@ -1,7 +1,6 @@
 import os
 from matplotlib import pyplot as plt
 import numpy as np
-import csv
 import sys
 
 def read_version_cost(version):
@@ -60,10 +59,14 @@ fig.tight_layout()
 
 plt.savefig(os.path.join(output_dir, "cost.png"))
 
-with open(os.path.join(output_dir, 'sched_perf.csv'), 'w+', newline='',) as csvfile:
-    writer = csv.writer(csvfile, delimiter=',')
-    headers = ["rate", "cost", "difference", "overhead"]
-    writer.writerow(headers)
-    for label, cost in schedule_median_cost.items():
-        row = [label[label.rfind(".")+1:], int(cost), int(cost - llvm_cost), "{0:.6f}‰".format( ( float(cost) / llvm_cost - 1) * 1000 ) ]
-        writer.writerow(row)
+import tabulate
+
+headers = ["Sampling Rate", "Est. Cost (cycles)", "Difference (cycles)", "Overhead (\\textperthousand)"]
+table = []
+for label, cost in schedule_median_cost.items():
+    row = [label[label.rfind(".")+1:], int(cost), int(cost - llvm_cost), "{0:.6f}".format( ( float(cost) / llvm_cost - 1) * 1000 ) ]
+    table.append(row)
+
+tabulate.LATEX_ESCAPE_RULES={}
+with open(os.path.join(output_dir, "sched_perf.tex"), "w+") as out:
+    out.write(tabulate.tabulate(table, headers=headers, tablefmt="latex"))#, numalign="center", stralign="center"))
