@@ -61,7 +61,7 @@ plt.savefig(os.path.join(output_dir, "cost.png"))
 
 import tabulate
 
-headers = ["Sampling Rate", "Est. Cost (cycles)", "Difference (cycles)", "Overhead (\\textperthousand)"]
+headers = ["Sampling Rate", "Mean Est. Cost (cycles)", "Difference (cycles)", "Overhead (\\textperthousand)"]
 table = []
 for label, cost in schedule_median_cost.items():
     row = [label[label.rfind(".")+1:], int(cost), int(cost - llvm_cost), "{0:.6f}".format( ( float(cost) / llvm_cost - 1) * 1000 ) ]
