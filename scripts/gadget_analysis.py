@@ -18,7 +18,7 @@ rows = ["1", "10", "100", "1000"]
 columns = ["diff", "registers", "sched"]
 
 # Format
-fig, axarr = plt.subplots(4, 3, sharey=True, sharex=True)
+fig, axarr = plt.subplots(4, 3)
 
 pad = 15
 # Add column title
@@ -34,12 +34,6 @@ for ax, col in zip(axarr[0], columns):
 for ax, row in zip(axarr[:,0], rows):
     ax.set_ylabel(row, rotation=0, size='large', labelpad=pad)
 
-# Remove x-ticks. They don't say anything
-# Format yaxis as percentage
-for ax in fig.axes:
-    #ax.xaxis.set_visible(False)
-    ax.yaxis.set_major_formatter(mtick.PercentFormatter())
-
 
 # Get the actual data
 for programs in os.listdir(root_dir):
@@ -52,10 +46,14 @@ for programs in os.listdir(root_dir):
         continue
     print("Processing {}.{}".format(strat, rate))
     data = read_program_gadgets_information(os.path.join(root_dir, programs))
-    data.sort(reverse=True)
+    #data.sort(reverse=True)
+    #data = [d for d in data if d >= 1]
     ids = [x for x in range(len(data))]
 
-    axarr[row][column].bar(ids, data, width=0.4, color="xkcd:burnt orange", snap=False)
+    axarr[row][column].set_yscale('log')
+    axarr[row][column].yaxis.set_major_formatter(mtick.PercentFormatter())
+    axarr[row][column].set_yticks( list(axarr[row][column].get_yticks()) + [max(data)] )
+    axarr[row][column].plot(data, color="xkcd:burnt orange")#, width=0.8, snap=False)
 
 # Save it
 fig.tight_layout()

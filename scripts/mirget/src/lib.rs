@@ -65,7 +65,6 @@ pub fn run(config: Config) -> Result<(), Box<Error>> {
     let occurences: Vec<f64> = gadgets_dedup.iter()
         .map( |x| gadgets.iter().filter(|&y| x == y).count() )
         .map( |x| ((x as f64 / program_count as f64) * 100.0) as f64)
-        .inspect(|x| println!("{}", x))
         .collect();
 
     let output_file_handle = fs::OpenOptions::new()
