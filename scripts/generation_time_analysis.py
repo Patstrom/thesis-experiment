@@ -37,4 +37,5 @@ plt.ylabel("Number of emitted solutions")
 plt.xlabel("Time in seconds")
 plt.legend()
 
+plt.tight_layout()
 plt.savefig(os.path.join(output_dir, "generator_time.png"))
