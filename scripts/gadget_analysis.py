@@ -18,6 +18,8 @@ rows = ["1", "10", "100", "1000"]
 columns = ["diff", "registers", "sched"]
 
 # Format
+plt.rc("xtick", labelsize=8)
+plt.rc("ytick", labelsize=8)
 fig, axarr = plt.subplots(4, 3)
 
 pad = 15
@@ -46,13 +48,13 @@ for programs in os.listdir(root_dir):
         continue
     print("Processing {}.{}".format(strat, rate))
     data = read_program_gadgets_information(os.path.join(root_dir, programs))
-    #data.sort(reverse=True)
+    data.sort(reverse=True)
     #data = [d for d in data if d >= 1]
-    ids = [x for x in range(len(data))]
 
     axarr[row][column].set_yscale('log')
     axarr[row][column].yaxis.set_major_formatter(mtick.PercentFormatter())
     axarr[row][column].set_yticks( list(axarr[row][column].get_yticks()) + [max(data)] )
+    axarr[row][column].set_xticks( [ 0, data.index(min(data)), int((len(data)/100))*100] ) # Round # of gadgets down to nearest 100
     axarr[row][column].plot(data, color="xkcd:burnt orange")#, width=0.8, snap=False)
 
 # Save it
