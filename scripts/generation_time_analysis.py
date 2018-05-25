@@ -22,7 +22,7 @@ for key in sorted(times): # Sort on function names so each marker represents the
     else:
         strat_times[strat].append(t)
 
-markers = ["o", "D", "*"]
+markers = ["o", "d", "*"]
 for i, (strat, times) in enumerate(strat_times.items()):
     flat_list = [0]
     markers_on = []
@@ -33,7 +33,7 @@ for i, (strat, times) in enumerate(strat_times.items()):
     # Every element in flat_list represents one solution.
     plt.plot([x / 1000 for x in flat_list], [x for x in range(len(flat_list))],
             label=strat.replace("diff", "enumerate").replace("sched", "shedule"),
-            marker=markers[i], markevery=markers_on)
+            marker=markers[i], markevery=markers_on, markersize=5)
 
     millis = flat_list[-1]
     hours = millis / 1000 / 60 / 60
