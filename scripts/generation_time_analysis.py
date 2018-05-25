@@ -12,10 +12,11 @@ with open(os.path.join(root_dir, "function_generation_times")) as f:
     times = json.load(f)
 
 strat_times = {}
-for key, t in times.items():
+for key in sorted(times): # Sort on function names so each marker represents the same function
     pieces = key.split("--")
     function, strat = pieces[0], pieces[1]
 
+    t = times[key]
     if strat_times.get(strat, None) is None:
         strat_times[strat] = [t]
     else:
