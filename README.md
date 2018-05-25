@@ -81,6 +81,7 @@ Shows a grid of barplots where each plot shows the gadget-breaking properties of
 strategy and sampling rate. Each bar represent a gadget and the y-value is the ratio of
 programs that gadget is present. The x-value is just an id and does not represent anything.
 
-#### sched_perf.tex
-A latex-formatted table showing the cost of the schedule strategy compared to the LLVM
-cost.
+#### generator_time.png
+A plot showing the execution time of the code generator and number of emitted solutions
+at sampling rate 1000. Each marker represents the finished execution of one function, which
+means that each marker represents a search for 1000000 solutions where 1000 was emitted.
