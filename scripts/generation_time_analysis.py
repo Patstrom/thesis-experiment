@@ -21,7 +21,8 @@ for key, t in times.items():
     else:
         strat_times[strat].append(t)
 
-for strat, times in strat_times.items():
+markers = ["o", "D", "*"]
+for i, (strat, times) in enumerate(strat_times.items()):
     flat_list = [0]
     markers_on = []
     for function_times in times:
@@ -31,7 +32,18 @@ for strat, times in strat_times.items():
     # Every element in flat_list represents one solution.
     plt.plot([x / 1000 for x in flat_list], [x for x in range(len(flat_list))],
             label=strat.replace("diff", "enumerate").replace("sched", "shedule"),
-            marker="D", markevery=markers_on)
+            marker=markers[i], markevery=markers_on)
+
+    millis = flat_list[-1]
+    hours = millis / 1000 / 60 / 60
+    minutes = millis / 1000 / 60 % 60
+    anno = "{}m".format(int(minutes))
+    anno = "{}h{}".format(int(hours), anno) if hours >= 1 else anno
+
+    anno_x = millis/1000
+    anno_y = len(flat_list) - 1
+    plt.annotate(anno, xy=(anno_x, anno_y), xytext=(anno_x - 1100, anno_y + 1100),
+                verticalalignment="top")
 
 plt.ylabel("Number of emitted solutions")
 plt.xlabel("Time in seconds")
