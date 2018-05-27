@@ -17,15 +17,18 @@ The data directory contains all generated function versions in the following str
  | | | +-- gadget_occurences
  | | | +-- <version_number>/
  | | | | +-- <function_name>-<rate>.unison.mir
- | | | | +-- cost
+ | | | | +-- cost_speed
+ | | | | +-- cost_size
  | | | +-- <version_number>/
  | | | | +-- <function_name>-<rate>.unison.mir
  | | | | +-- cost
- | | | | +-- gadgets
+ | | | | +-- cost_speed
+ | | | | +-- cost_size
  | | | +-- <version_number>/
  | | | | +-- <function_name>-<rate>.unison.mir
  | | | | +-- cost
- | | | | +-- gadgets
+ | | | | +-- cost_speed
+ | | | | +-- cost_size
 ```
 
 And so on. `<function_name>`, `<rate>`, `<version_number>` and `<strat>` are of course replaced
@@ -37,13 +40,14 @@ The strategy refered to as `enumerate` in the thesis is called `diff`, `schedule
 
 The sampling rates used are `1`, `10`, `100` and `1000`.
 
-The `cost` file contains one key-value pair of <function_name> and cost (in cycles) on every
+The `cost_` files contains one key-value pair of <function_name> and cost (speed or size) on every
 line. The `gadget_occurences` file contains a list of ratios where index 0 represents
-the percentage of programs gadget 0 is present in. It's calculated by making a list of
-all gadgets across all versions, flattening it and counting occurences of every gadget,
-divide the count by the number of programs and multiply by 100.
+the percentage of program versions gadget 0 is present in. It's calculated by making a list of
+all gadgets across all versions, flattening it, finding all unique gadgets and counting
+the occurences of every unique gadget, divide the count by the number of programs and
+multiply by 100.
 
-Note that the `cost` file is written during the data generation phase while the `gadget_occurences`
+Note that the `cost` files is written during the data generation phase while the `gadget_occurences`
 file must be generated afterwards. All respective `gadget_occurences` files are present in this repository
 
 ### Scripts
@@ -63,8 +67,7 @@ For convenience the is a `mir_directory.sh` script to which you can give the `da
 directory and it will run the command on all directories in that directory.
 
 #### cost\_analysis
-A python script to generate the boxplots visualizing the estimated cost of each program
-and the table comparing the cost of schedule to LLVM.
+A python script to generate the boxplots visualizing the estimated cost of each program.
 
 #### gadget\_analysis
 A python script to generate the bar graphs that visualizes frequence of gadgets in programs
