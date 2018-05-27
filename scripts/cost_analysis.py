@@ -5,11 +5,11 @@ import sys
 
 def read_version_cost(version):
     with open( os.path.join(version, "cost") ) as p:
-        total_cost = 0
+        f_cost = np.array([])
         for line in p:
             cost = int(line.split(":")[1])
-            total_cost += cost
-        return total_cost
+            f_cost = np.append(f_cost, cost)
+        return f_cost.prod()**(1.0/len(f_cost))
 
 
 def read_program_costs(program):
