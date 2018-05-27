@@ -55,7 +55,14 @@ pub fn run(config: Config) -> Result<(), Box<Error>> {
         program_count += 1;
     }
 
-    let occurences: Vec<f64> = gadgets.iter()
+    let mut gadgets_dedup = Vec::new();
+    for gadget in gadgets.iter() {
+        if !gadgets_dedup.contains(gadget) {
+            gadgets_dedup.push(gadget.clone());
+        }
+    }
+
+    let occurences: Vec<f64> = gadgets_dedup.iter()
         .map( |x| gadgets.iter().filter(|&y| x == y).count() )
         .map( |x| ((x as f64 / program_count as f64) * 100.0) as f64)
         .collect();
