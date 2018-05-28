@@ -21,9 +21,3 @@ gcc.alias.get_frame_alias_set: 11
 gobmk.board.get_last_player: 8
 gobmk.interface.init_gnugo: 6
 mesa.api.glIndexd: 13
-gcc.jump.unsigned_condition: 21
-gcc.varasm.data_section: 15
-h264ref.memalloc.no_mem_exit: 11
-gcc.rtlanal.insn_dependent_p_1: 12
-gcc.insn-output.output_51: 20
-gobmk.owl_attackpat.autohelperowl_attackpat68: 19
