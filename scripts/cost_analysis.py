@@ -72,7 +72,7 @@ fig, size_bp = plt.subplots(1,1)
 #fig.suptitle("Distributions of the geometric mean between the estimated size of each function in program versions")
 
 size_bp.boxplot(sizes, whis="range")
-size_bp.set_ylabel("Geometric mean of estimated size (in ?)")
+size_bp.set_ylabel("Geometric mean of size (number of instructions)")
 size_xtickNames = plt.setp(size_bp, xticklabels=labels)
 plt.setp(size_xtickNames, rotation=45, fontsize=8)
 size_bp.axhline(y=llvm_cost["size"], color="r", linestyle=":", label="Regular LLVM solution")
