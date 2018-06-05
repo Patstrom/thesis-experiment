@@ -20,7 +20,7 @@ columns = ["diff", "registers", "sched"]
 # Format
 plt.rc("xtick", labelsize=8)
 plt.rc("ytick", labelsize=8)
-fig, axarr = plt.subplots(4, 3)
+fig, axarr = plt.subplots(4, 3, sharey=True)
 
 pad = 15
 # Add column title
@@ -51,11 +51,22 @@ for programs in os.listdir(root_dir):
     data.sort(reverse=True)
     #data = [d for d in data if d >= 1]
 
+
     axarr[row][column].set_yscale('log')
     axarr[row][column].yaxis.set_major_formatter(mtick.PercentFormatter())
     axarr[row][column].set_yticks( list(axarr[row][column].get_yticks()) + [max(data)] )
     axarr[row][column].set_xticks( [ 0, data.index(min(data)), int((len(data)/100))*100] ) # Round # of gadgets down to nearest 100
     axarr[row][column].plot(data, color="xkcd:burnt orange")#, width=0.8, snap=False)
+
+
+    anno_x = data.index(max(data))
+    anno_y = data[data.index(max(data))]
+    axarr[row][column].annotate("{:.0f}%".format(anno_y), xy=(anno_x, anno_y), xytext=(anno_x+50, anno_y+30), verticalalignment="top")
+
+for ax in axarr.flatten():
+    ax.yaxis.set_tick_params(labelleft=True)
+    for tk in ax.get_yticklabels():
+        tk.set_visible(True)
 
 # Save it
 fig.tight_layout()
