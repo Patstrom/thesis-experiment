@@ -51,10 +51,9 @@ for programs in os.listdir(root_dir):
     data.sort(reverse=True)
     #data = [d for d in data if d > min(data)]
 
-
     axarr[row][column].set_yscale('log')
     axarr[row][column].yaxis.set_major_formatter(mtick.PercentFormatter())
-    axarr[row][column].set_yticks( list(axarr[row][column].get_yticks()) + [max(data)] )
+    #axarr[row][column].set_yticks( list(axarr[row][column].get_yticks()) + [max(data)] )
     axarr[row][column].set_xticks( [ 0, data.index(min(data)), len(data)] )
     axarr[row][column].plot(data, color="xkcd:burnt orange")#, width=0.8, snap=False)
 
